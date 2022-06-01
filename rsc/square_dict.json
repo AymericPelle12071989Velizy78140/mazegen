@@ -1,7 +1,0 @@
-{
-  "Start": "rsc/img/depart.svg",
-  "Trap": "rsc/img/toile-arraignee-umbra.svg",
-  "Bonus": "rsc/img/beans.svg",
-  "Replay": "rsc/img/rejouer-shadow.svg",
-  "Finish": "rsc/img/arrivee-shadow.svg"
-}
