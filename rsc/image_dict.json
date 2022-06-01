@@ -1,0 +1,8 @@
+{
+  "Start": "   start.png   ",
+  "Finish": { "shortname": "F", "file": "finish.png", "rotation": "90", "hflip": true, "vflip": true },
+  "Trap":   { "file": "trap.png", "rotation": "90", "hflip": true },
+  "Error":  { "file": "error.png", "rotation": "" },
+  "Error2": { "file": "error.png", "rotation": "oups" },
+  "Last":   { "file": "last.png" }
+}
