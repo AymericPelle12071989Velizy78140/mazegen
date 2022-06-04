@@ -17,6 +17,22 @@
     "Trap": "img/toile-arraignee-umbra.svg",
     "Bonus": "img/beans.svg",
     "Replay": "img/rejouer-shadow.svg",
-    "Finish": "img/arrivee-shadow.svg"
+    "Finish": "img/arrivee-shadow.svg",
+    "VBL": "img/fleches_1_b.svg",
+    "VBU": { "file": "img/fleches_1_b.svg", "rotation": 90 },
+    "VBR": { "file": "img/fleches_1_b.svg", "rotation": 180 },
+    "VBD": { "file": "img/fleches_1_b.svg", "rotation": -90 },
+    "COBU": "img/fleches_2_ob.svg",
+    "COBR": { "file": "img/fleches_2_ob.svg", "rotation": 90 },
+    "COBD": { "file": "img/fleches_2_ob.svg", "rotation": 180 },
+    "COBL": { "file": "img/fleches_2_ob.svg", "rotation": -90 },
+    "LOBR": "img/fleches_2_line_ob.svg",
+    "LOBD": { "file": "img/fleches_2_line_ob.svg", "rotation": 90 },
+    "LOBL": { "file": "img/fleches_2_line_ob.svg", "rotation": 180 },
+    "LOBU": { "file": "img/fleches_2_line_ob.svg", "rotation": -90 },
+    "TVBOU": "img/fleches_3_vbo.svg",
+    "TVBOR": { "file": "img/fleches_3_vbo.svg", "rotation": 90 },
+    "TVBOD": { "file": "img/fleches_3_vbo.svg", "rotation": 180 },
+    "TVBOL": { "shortname": "TL", "file": "img/fleches_3_vbo.svg", "rotation": -90 }
   }
 }
