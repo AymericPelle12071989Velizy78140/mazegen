@@ -2,8 +2,7 @@
   "square_size": 124,
   "wall_size": 3,
   "bg_color": "white",
-  "background": "img/background.png [not used]",
-  "sq_bg_img_path": "img/sqbg.svg",
+  "sq_bg_img": "img/sqbg.svg",
 
   "walls":
   {

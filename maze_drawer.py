@@ -39,7 +39,7 @@ class MazeDrawer:
         if bg_img_path:
             bg_img_path = "{}/{}".format(rsc_dir, bg_img_path)
             self.bg_img = image_toolkit.load_image(bg_img_path)
-        sq_bg_img_path = jstruct.get('sq_bg_img_path', '')
+        sq_bg_img_path = jstruct.get('sq_bg_img', '')
         if sq_bg_img_path:
             sq_bg_img_path = "{}/{}".format(rsc_dir, sq_bg_img_path)
             if Path(sq_bg_img_path).suffix == ".svg":
