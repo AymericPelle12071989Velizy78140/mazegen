@@ -97,6 +97,7 @@ class MazeDrawer:
 
     def create_maze_image(self, maze: Maze):
         maze_img = self.create_empty_maze_image(maze.width, maze.height)
+        self.draw_square_backgrounds(maze_img, maze)
         self.draw_squares(maze_img, maze)
         self.draw_walls(maze_img, maze)
         return maze_img
@@ -131,6 +132,13 @@ class MazeDrawer:
                 for i in range(width+1):
                     self.draw_left_border(maze_img, draw, i, j)
 
+    def draw_square_backgrounds(self, maze_img, maze: Maze):
+        if self.sq_bg_img is not None:
+            with Drawing() as draw:
+                for j in range(maze.height):
+                    for i in range(maze.width):
+                        self.draw_on_square(maze_img, draw, self.sq_bg_img, i, j)
+
     def draw_squares(self, maze_img, maze: Maze):
         with Drawing() as draw:
             for j in range(maze.height):
@@ -138,7 +146,7 @@ class MazeDrawer:
                     sq_type = maze.getitem(i, j).type
                     if isinstance(sq_type, str) and len(sq_type) > 0:
                         sq_img = self.square_dict[sq_type]
-                        self.draw_square(maze_img, draw, sq_img, i, j)
+                        self.draw_on_square(maze_img, draw, sq_img, i, j)
             pass
 
     def draw_walls(self, maze_img, maze: Maze):
@@ -163,7 +171,7 @@ class MazeDrawer:
                         draw.fill_color = self.wall_dict[bd_type]
                         self.draw_right_border(maze_img, draw, i, j)
 
-    def draw_square(self, maze_img, draw, sq_img, i, j):
+    def draw_on_square(self, maze_img, draw, sq_img, i, j):
         x = self.wsquare_size * i + self.wall_size
         y = self.wsquare_size * j + self.wall_size
         draw.composite(operator='over', left=x, top=y,

@@ -1,9 +1,9 @@
 {
   "square_size": 124,
   "wall_size": 3,
-  "background_color": "white",
-  "background": "rsc/img/background.png [not used]",
-  "square_background": "rsc/img/square_background.png [not used]",
+  "bg_color": "white",
+  "background": "img/background.png [not used]",
+  "sq_bg_img_path": "img/sqbg.svg",
 
   "walls":
   {
