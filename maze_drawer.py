@@ -96,7 +96,7 @@ class MazeDrawer:
 
     def __load_image(self, img_path):
         if Path(img_path).suffix == ".svg":
-            return image_toolkit.load_svg_image(img_path, self.square_size * 2)
+            return image_toolkit.load_svg_image(img_path, self.square_size)
         return image_toolkit.load_image(img_path)
 
     @property
@@ -143,78 +143,80 @@ class MazeDrawer:
                     draw(maze_img)
 
     def draw_empty_walls(self, maze_img, width, height):
-        with Drawing() as draw:
-            draw.fill_color = self.wall_dict["empty"]
-            for j in range(height+1):
-                for i in range(width):
-                    self.draw_top_border(maze_img, draw, i, j)
-            for j in range(height):
-                for i in range(width+1):
-                    self.draw_left_border(maze_img, draw, i, j)
+        fill_color = self.wall_dict["empty"]
+        for j in range(height+1):
+            for i in range(width):
+                self.draw_top_border(maze_img, i, j, fill_color)
+        for j in range(height):
+            for i in range(width+1):
+                self.draw_left_border(maze_img, i, j, fill_color)
 
     def draw_squares(self, maze_img, maze: Maze):
-        with Drawing() as draw:
-            for j in range(maze.height):
-                for i in range(maze.width):
-                    square = maze.getitem(i, j)
-                    sq_bg = square.background
-                    if isinstance(sq_bg, str) and len(sq_bg) > 0:
-                        sq_img = self.square_background_dict[sq_bg]
-                        self.draw_on_square(maze_img, draw, sq_img, i, j)
-                    sq_type = square.type
-                    if isinstance(sq_type, str) and len(sq_type) > 0:
-                        sq_img = self.square_dict[sq_type]
-                        self.draw_on_square(maze_img, draw, sq_img, i, j)
+        for j in range(maze.height):
+            for i in range(maze.width):
+                square = maze.getitem(i, j)
+                sq_bg = square.background
+                if isinstance(sq_bg, str) and len(sq_bg) > 0:
+                    sq_img = self.square_background_dict[sq_bg]
+                    self.draw_on_square(maze_img, sq_img, i, j)
+                sq_type = square.type
+                if isinstance(sq_type, str) and len(sq_type) > 0:
+                    sq_img = self.square_dict[sq_type]
+                    self.draw_on_square(maze_img, sq_img, i, j)
 
     def draw_walls(self, maze_img, maze: Maze):
+        for j in range(maze.height):
+            for i in range(maze.width):
+                borders = maze.getitem(i, j).borders
+                bd_type = borders[Direction.TOP].type
+                if isinstance(bd_type, str) and len(bd_type) > 0:
+                    self.draw_top_border(maze_img, i, j, self.wall_dict[bd_type])
+                bd_type = borders[Direction.LEFT].type
+                if isinstance(bd_type, str) and len(bd_type) > 0:
+                    self.draw_left_border(maze_img, i, j, self.wall_dict[bd_type])
+                bd_type = borders[Direction.BOTTOM].type
+                if isinstance(bd_type, str) and len(bd_type) > 0:
+                    self.draw_bottom_border(maze_img, i, j, self.wall_dict[bd_type])
+                bd_type = borders[Direction.RIGHT].type
+                if isinstance(bd_type, str) and len(bd_type) > 0:
+                    self.draw_right_border(maze_img, i, j, self.wall_dict[bd_type])
+
+    def draw_on_square(self, maze_img, sq_img, i, j):
         with Drawing() as draw:
-            for j in range(maze.height):
-                for i in range(maze.width):
-                    borders = maze.getitem(i, j).borders
-                    bd_type = borders[Direction.TOP].type
-                    if isinstance(bd_type, str) and len(bd_type) > 0:
-                        draw.fill_color = self.wall_dict[bd_type]
-                        self.draw_top_border(maze_img, draw, i, j)
-                    bd_type = borders[Direction.LEFT].type
-                    if isinstance(bd_type, str) and len(bd_type) > 0:
-                        draw.fill_color = self.wall_dict[bd_type]
-                        self.draw_left_border(maze_img, draw, i, j)
-                    bd_type = borders[Direction.BOTTOM].type
-                    if isinstance(bd_type, str) and len(bd_type) > 0:
-                        draw.fill_color = self.wall_dict[bd_type]
-                        self.draw_bottom_border(maze_img, draw, i, j)
-                    bd_type = borders[Direction.RIGHT].type
-                    if isinstance(bd_type, str) and len(bd_type) > 0:
-                        draw.fill_color = self.wall_dict[bd_type]
-                        self.draw_right_border(maze_img, draw, i, j)
+            x = self.wsquare_size * i + self.wall_size
+            y = self.wsquare_size * j + self.wall_size
+            draw.composite(operator='over', left=x, top=y,
+                           width=self.square_size, height=self.square_size, image=sq_img)
+            draw(maze_img)
 
-    def draw_on_square(self, maze_img, draw, sq_img, i, j):
-        x = self.wsquare_size * i + self.wall_size
-        y = self.wsquare_size * j + self.wall_size
-        draw.composite(operator='over', left=x, top=y,
-                       width=self.square_size, height=self.square_size, image=sq_img)
-        draw(maze_img)
+    def draw_top_border(self, maze_img, i, j, color):
+        with Drawing() as draw:
+            x = self.wsquare_size * i + self.wall_size
+            y = self.wsquare_size * j
+            draw.fill_color = color
+            draw.rectangle(left=x, top=y, width=self.square_size - 1, height=self.wall_size - 1)
+            draw(maze_img)
 
-    def draw_top_border(self, maze_img, draw, i, j):
-        x = self.wsquare_size * i + self.wall_size
-        y = self.wsquare_size * j
-        draw.rectangle(left=x, top=y, width=self.square_size - 1, height=self.wall_size - 1)
-        draw(maze_img)
+    def draw_left_border(self, maze_img, i, j, color):
+        with Drawing() as draw:
+            x = self.wsquare_size * i
+            y = self.wsquare_size * j + self.wall_size
+            draw.fill_color = color
+            draw.rectangle(left=x, top=y, width=self.wall_size - 1, height=self.square_size - 1)
+            draw(maze_img)
 
-    def draw_left_border(self, maze_img, draw, i, j):
-        x = self.wsquare_size * i
-        y = self.wsquare_size * j + self.wall_size
-        draw.rectangle(left=x, top=y, width=self.wall_size - 1, height=self.square_size - 1)
-        draw(maze_img)
+    def draw_bottom_border(self, maze_img, i, j, color):
+        with Drawing() as draw:
+            x = self.wsquare_size * i + self.wall_size
+            y = self.wsquare_size * j + self.wsquare_size
+            draw.fill_color = color
+            draw.rectangle(left=x, top=y, width=self.square_size - 1, height=self.wall_size - 1)
+            draw(maze_img)
 
-    def draw_bottom_border(self, maze_img, draw, i, j):
-        x = self.wsquare_size * i + self.wall_size
-        y = self.wsquare_size * j + self.wsquare_size
-        draw.rectangle(left=x, top=y, width=self.square_size - 1, height=self.wall_size - 1)
-        draw(maze_img)
-
-    def draw_right_border(self, maze_img, draw, i, j):
-        x = self.wsquare_size * i + self.wsquare_size
-        y = self.wsquare_size * j + self.wall_size
-        draw.rectangle(left=x, top=y, width=self.wall_size - 1, height=self.square_size - 1)
-        draw(maze_img)
+    def draw_right_border(self, maze_img, i, j, color):
+        with Drawing() as draw:
+            x = self.wsquare_size * i + self.wsquare_size
+            y = self.wsquare_size * j + self.wall_size
+            draw.fill_color = color
+            draw.rectangle(left=x, top=y, width=self.wall_size - 1, height=self.square_size - 1)
+            draw(maze_img)
