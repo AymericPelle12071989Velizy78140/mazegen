@@ -134,11 +134,11 @@ class MazeDrawer:
         corner_img = self.create_corner_image()
         cwidth = corner_img.width
         cheight = corner_img.height
-        with Drawing() as draw:
-            for j in range(height + 1):
-                for i in range(width + 1):
-                    x = self.wsquare_size * i
-                    y = self.wsquare_size * j
+        for j in range(height + 1):
+            for i in range(width + 1):
+                x = self.wsquare_size * i
+                y = self.wsquare_size * j
+                with Drawing() as draw:
                     draw.composite(operator='over', left=x, top=y, width=cwidth, height=cheight, image=corner_img)
                     draw(maze_img)
 
