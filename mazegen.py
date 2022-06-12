@@ -31,9 +31,9 @@ class Mazegen(Program):
 
 
 if __name__ == "__main__":
-    vstr = ["3cm", "3.5cm", "3 px", "3.5 mm", "3px", "3wh", "3      "]
-    for item in vstr:
-        print("-" * 80)
-        print(pxconv.str_to_px(item), " px!")
+    # vstr = ["3cm", "3.5cm", "3 px", "3.5 mm", "3px", "3wh", "3      "]
+    # for item in vstr:
+    #     print("-" * 80)
+    #     print(pxconv.str_to_px(item), " px!")
     program = Mazegen()
     program.run()

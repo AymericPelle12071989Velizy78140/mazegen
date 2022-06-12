@@ -19,7 +19,7 @@ class MazeDrawer:
         self.square_size = 124
         self.wall_size = 3
         self.bg_color = Color('white')
-        self.bg_img = None
+        self.bg_img_path = None
         self.wall_dict = dict()
         self.square_dict = dict()
         self.square_background_dict = dict()
@@ -34,13 +34,12 @@ class MazeDrawer:
     def load_from_jstruct(self, jstruct, rsc_dir=os.getcwd()):
         self.square_size = int(jstruct.get('square_size', 124))
         self.wall_size = int(jstruct.get('wall_size', 3))
-        self.bg_color = Color(jstruct.get('bg_color', 'white'))
-        bg_img_path = jstruct.get('bg_img', '')
+        self.bg_color = Color(jstruct.get('background_color', 'white'))
+        bg_img_path = jstruct.get('background_image', None)
         if bg_img_path:
-            bg_img_path = "{}/{}".format(rsc_dir, bg_img_path)
-            self.bg_img = image_toolkit.load_image(bg_img_path)
+            self.bg_img_path = "{}/{}".format(rsc_dir, bg_img_path)
         self.__load_walls_from_jdict(jstruct['walls'])
-        self.__load_square_backgrounds_from_jdict(jstruct['square-backgrounds'], rsc_dir)
+        self.__load_square_backgrounds_from_jdict(jstruct['square_backgrounds'], rsc_dir)
         self.__load_squares_from_jdict(jstruct['squares'], rsc_dir)
 
     def __load_walls_from_jdict(self, wall_jdict):
@@ -104,9 +103,19 @@ class MazeDrawer:
         iwidth = self.wsquare_size * width + self.wall_size
         iheight = self.wsquare_size * height + self.wall_size
         maze_img = Image(width=iwidth, height=iheight, background=self.bg_color)
+        if self.bg_img_path:
+            self.draw_background(maze_img, width, height)
         self.draw_corners(maze_img, width, height)
         self.draw_empty_walls(maze_img, width, height)
         return maze_img
+
+    def draw_background(self, maze_img, width: int, height: int):
+        with Drawing() as draw:
+            mz_img_width = self.wsquare_size * width + self.wall_size
+            mz_img_height = self.wsquare_size * height + self.wall_size
+            bg_img = image_toolkit.load_image(self.bg_img_path, mz_img_width, mz_img_height)
+            draw.composite(operator='over', left=0, top=0, width=mz_img_width, height=mz_img_height, image=bg_img)
+            draw(maze_img)
 
     def draw_corners(self, maze_img, width, height):
         corner_img = self.create_corner_image()

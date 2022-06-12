@@ -20,7 +20,10 @@ def load_image(img_path, *args):
         return load_svg_image(img_path, *args)
     img = Image(filename=img_path)
     if do_resize:
-        img.resize(int(args[0]), int(args[1]))
+        nw = int(args[0])
+        nh = int(args[1])
+        if img.width != nw and img.height != nh:
+            img.resize(nw, nh)
     return img
 
 
