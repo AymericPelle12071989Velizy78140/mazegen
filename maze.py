@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import openpyxl
 
 import grid.grid
@@ -37,8 +39,10 @@ class Maze(grid.grid.Grid):
                 self.build_from_workbook(maze_arg)
             elif type(maze_arg) is str:
                 self.build_from_xslx(maze_arg)
+            elif type(maze_arg) is Path:
+                self.build_from_xslx(str(maze_arg))
             else:
-                raise ValueError(maze_arg)
+                raise ValueError("'{}' has invalid type '{}'.".format(maze_arg, type(maze_arg)))
 
     def build_from_xslx(self, xlsx_file: str):
         wbook = openpyxl.load_workbook(xlsx_file)
