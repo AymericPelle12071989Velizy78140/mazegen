@@ -18,7 +18,7 @@
   "squares":
   {
     "Start": { "shortname": "S", "file": "img/depart.svg" },
-    "Trap": { "shortname": "T", "file": "img/toile-arraignee-umbra.svg" },
+    "Trap": { "shortname": "T", "file": "img/toile-arraignee.svg" },
     "Bonus": { "shortname": "B", "file": "img/beans.svg" },
     "Replay": { "shortname": "R", "file": "img/rejouer-shadow.svg" },
     "Finish": { "shortname": "F", "file": "img/arrivee-shadow.svg" },

@@ -7,6 +7,7 @@ from wand.color import Color
 from wand.drawing import Drawing
 
 import image_toolkit
+import pxconv
 from direction import Direction
 from maze import Maze
 
@@ -32,8 +33,8 @@ class MazeDrawer:
             self.load_from_jstruct(json.loads(data), rsc_dir)
 
     def load_from_jstruct(self, jstruct, rsc_dir=os.getcwd()):
-        self.square_size = int(jstruct.get('square_size', 124))
-        self.wall_size = int(jstruct.get('wall_size', 3))
+        self.__load_square_size(jstruct)
+        self.__load_wall_size(jstruct)
         self.bg_color = Color(jstruct.get('background_color', 'white'))
         bg_img_path = jstruct.get('background_image', None)
         if bg_img_path:
@@ -41,6 +42,18 @@ class MazeDrawer:
         self.__load_walls_from_jdict(jstruct['walls'])
         self.__load_square_backgrounds_from_jdict(jstruct['square_backgrounds'], rsc_dir)
         self.__load_squares_from_jdict(jstruct['squares'], rsc_dir)
+
+    def __load_square_size(self, jstruct):
+        sq_size = jstruct.get('square_size', "3cm")
+        if isinstance(sq_size, str):
+            sq_size = pxconv.str_to_px(sq_size)
+        self.square_size = int(sq_size)
+
+    def __load_wall_size(self, jstruct):
+        wl_size = int(jstruct.get('wall_size', 3))
+        if isinstance(wl_size, str):
+            wl_size = pxconv.str_to_px(wl_size)
+        self.wall_size = int(wl_size)
 
     def __load_walls_from_jdict(self, wall_jdict):
         self.wall_dict = dict()
