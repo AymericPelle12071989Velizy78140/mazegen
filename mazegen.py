@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
-import logging
+from parse import with_pattern, parse
 import argparse
 
 from wand.display import display
 
+import pxconv
 from maze import Maze
 from maze_drawer import MazeDrawer
 from program import Program
@@ -29,5 +30,10 @@ class Mazegen(Program):
             img.save(filename=self.args.output_file)
 
 
-program = Mazegen()
-program.run()
+if __name__ == "__main__":
+    vstr = ["3cm", "3.5cm", "3 px", "3.5 mm", "3px", "3wh", "3      "]
+    for item in vstr:
+        print("-" * 80)
+        print(pxconv.str_to_px(item), " px!")
+    program = Mazegen()
+    program.run()

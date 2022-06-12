@@ -2,12 +2,16 @@
   "square_size": 124,
   "wall_size": 3,
   "bg_color": "white",
-  "sq_bg_img": "img/sqbg.svg",
 
   "walls":
   {
     "empty": "rgb(207,207,207)",
     "wall": "black"
+  },
+
+  "square-backgrounds":
+  {
+    "bg": "img/sqbg.svg"
   },
 
   "squares":

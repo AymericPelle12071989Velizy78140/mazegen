@@ -23,41 +23,71 @@ class Maze(grid.grid.Grid):
             # https://openpyxl.readthedocs.io/en/stable/api/openpyxl.styles.borders.html?highlight=border#openpyxl.styles.borders.Border
             if side.style is not None:
                 match side.style:
-                    case "hair"|"thin"|"thick"|"medium":
+                    case "hair" | "thin" | "thick" | "medium":
                         return Maze.Square.Border("wall")
                     case _:
                         pass
             return Maze.Square.Border()
     # class
 
-    def __init__(self, maze_arg=None, sheet_name: str = ""):
+    def __init__(self, maze_arg=None):
         # https://www.geeksforgeeks.org/python-reading-excel-file-using-openpyxl-module/
         if maze_arg is not None:
             if type(maze_arg) is openpyxl.workbook.workbook.Workbook:
-                self.build_from_workbook(maze_arg, sheet_name)
-            elif type(maze_arg) is openpyxl.worksheet.worksheet.Worksheet:
-                self.build_from_sheet(maze_arg)
+                self.build_from_workbook(maze_arg)
             elif type(maze_arg) is str:
-                self.build_from_xslx(maze_arg, sheet_name)
+                self.build_from_xslx(maze_arg)
+            else:
+                raise ValueError(maze_arg)
 
-    def build_from_xslx(self, xlsx_file: str, sheet_name: str = ""):
+    def build_from_xslx(self, xlsx_file: str):
         wbook = openpyxl.load_workbook(xlsx_file)
-        self.build_from_workbook(wbook, sheet_name)
+        self.build_from_workbook(wbook)
 
-    def build_from_workbook(self, wbook: openpyxl.workbook.workbook.Workbook, sheet_name: str = ""):
-        sheet = wbook.active if sheet_name == "" else wbook[sheet_name]
-        self.build_from_sheet(sheet)
+    def build_from_workbook(self, wbook: openpyxl.workbook.workbook.Workbook):
+        mz_sheet = wbook["maze"]
+        if mz_sheet:
+            bg_sheet = wbook["background"] if "background" in wbook.sheetnames else None
+            self.build_from_sheets(mz_sheet, bg_sheet)
+        else:
+            raise Exception("The provided workbook does not have a sheet named 'maze'")
 
-    def build_from_sheet(self, sheet: openpyxl.worksheet.worksheet.Worksheet):
-        self.build(sheet.max_column - sheet.min_column + 1, sheet.max_row - sheet.min_row + 1)
-        j = 0
-        for sj in range(sheet.min_row, sheet.max_row + 1):
-            i = 0
-            for si in range(sheet.min_column, sheet.max_column + 1):
-                cell = sheet.cell(row=sj, column=si)
-                square = Maze.Square(cell)
-                print("{},{}: {}".format(si, sj, square))
-                self.setitem(i, j, square)
+    def build_from_sheets(self, mz_sheet: openpyxl.worksheet.worksheet.Worksheet,
+                          bg_sheet: openpyxl.worksheet.worksheet.Worksheet):
+        mz_width = mz_sheet.max_column - mz_sheet.min_column + 1
+        mz_height = mz_sheet.max_row - mz_sheet.min_row + 1
+        self.build(mz_width, mz_height)
+        self.__fill_from_mz_sheet(mz_sheet)
+        if bg_sheet:
+            self.__fill_from_bg_sheet(bg_sheet, mz_sheet.min_column, mz_sheet.max_column,
+                                      mz_sheet.min_row, mz_sheet.max_row)
+        for j in range(self.height):
+            for i in range(self.width):
+                square = self.getitem(i, j)
+                print("{},{}: {}".format(i, j, square))
                 i += 1
             j += 1
             print()
+
+    def __fill_from_mz_sheet(self, mz_sheet: openpyxl.worksheet.worksheet.Worksheet):
+        j = 0
+        for sj in range(mz_sheet.min_row, mz_sheet.max_row + 1):
+            i = 0
+            for si in range(mz_sheet.min_column, mz_sheet.max_column + 1):
+                cell = mz_sheet.cell(row=sj, column=si)
+                square = Maze.Square(cell)
+                self.setitem(i, j, square)
+                i += 1
+            j += 1
+
+    def __fill_from_bg_sheet(self, bg_sheet: openpyxl.worksheet.worksheet.Worksheet,
+                             mz_minc, mz_maxc, mz_minr, mz_maxr):
+        j = 0
+        for sj in range(mz_minr, mz_maxr + 1):
+            i = 0
+            for si in range(mz_minc, mz_maxc + 1):
+                cell = bg_sheet.cell(row=sj, column=si)
+                square = self.getitem(i, j)
+                square.background = cell.value
+                i += 1
+            j += 1

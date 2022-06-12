@@ -5,6 +5,7 @@
 ```bash
 pip install openpyxl
 pip install wand
+tkinter
 ```
 
 # Use

@@ -20,9 +20,9 @@ class MazeDrawer:
         self.wall_size = 3
         self.bg_color = Color('white')
         self.bg_img = None
-        self.sq_bg_img = None
         self.wall_dict = dict()
         self.square_dict = dict()
+        self.square_background_dict = dict()
 
     def init_from_json_file(self, image_dict_file, rsc_dir=None):
         with open(image_dict_file) as file:
@@ -39,14 +39,8 @@ class MazeDrawer:
         if bg_img_path:
             bg_img_path = "{}/{}".format(rsc_dir, bg_img_path)
             self.bg_img = image_toolkit.load_image(bg_img_path)
-        sq_bg_img_path = jstruct.get('sq_bg_img', '')
-        if sq_bg_img_path:
-            sq_bg_img_path = "{}/{}".format(rsc_dir, sq_bg_img_path)
-            if Path(sq_bg_img_path).suffix == ".svg":
-                self.sq_bg_img = image_toolkit.load_svg_image(sq_bg_img_path, self.square_size * 2)
-            else:
-                self.sq_bg_img = image_toolkit.load_image(sq_bg_img_path)
         self.__load_walls_from_jdict(jstruct['walls'])
+        self.__load_square_backgrounds_from_jdict(jstruct['square-backgrounds'], rsc_dir)
         self.__load_squares_from_jdict(jstruct['squares'], rsc_dir)
 
     def __load_walls_from_jdict(self, wall_jdict):
@@ -54,13 +48,18 @@ class MazeDrawer:
         for key, value in wall_jdict.items():
             self.wall_dict[key] = Color(value)
 
+    def __load_square_backgrounds_from_jdict(self, square_background_jdict, rsc_dir: str):
+        self.square_background_dict = dict()
+        for key, value in square_background_jdict.items():
+            self.__load_square_img_from_jdata(self.square_background_dict, key, value, rsc_dir)
+
     def __load_squares_from_jdict(self, square_jdict, rsc_dir: str):
         self.square_dict = dict()
         for key, value in square_jdict.items():
-            self.__load_square_from_jdata(key, value, rsc_dir)
+            self.__load_square_img_from_jdata(self.square_dict, key, value, rsc_dir)
 
-    def __load_square_from_jdata(self, key: str, jdata, rsc_dir: str):
-        assert not key in self.square_dict
+    def __load_square_img_from_jdata(self, img_dict: dict, key: str, jdata, rsc_dir: str):
+        assert not key in img_dict
         image = None
         if type(jdata) is str:
             # "Finish": "finish.png"
@@ -79,9 +78,9 @@ class MazeDrawer:
                 image.flip()
             shortname = jdata.get('shortname', None)
             if shortname is not None:
-                assert not shortname in self.square_dict
-                self.square_dict[shortname] = image
-        self.square_dict[key] = image
+                assert not shortname in img_dict
+                img_dict[shortname] = image
+        img_dict[key] = image
 
     def __load_image(self, img_path):
         if Path(img_path).suffix == ".svg":
@@ -97,7 +96,6 @@ class MazeDrawer:
 
     def create_maze_image(self, maze: Maze):
         maze_img = self.create_empty_maze_image(maze.width, maze.height)
-        self.draw_square_backgrounds(maze_img, maze)
         self.draw_squares(maze_img, maze)
         self.draw_walls(maze_img, maze)
         return maze_img
@@ -132,22 +130,19 @@ class MazeDrawer:
                 for i in range(width+1):
                     self.draw_left_border(maze_img, draw, i, j)
 
-    def draw_square_backgrounds(self, maze_img, maze: Maze):
-        if self.sq_bg_img is not None:
-            with Drawing() as draw:
-                for j in range(maze.height):
-                    for i in range(maze.width):
-                        self.draw_on_square(maze_img, draw, self.sq_bg_img, i, j)
-
     def draw_squares(self, maze_img, maze: Maze):
         with Drawing() as draw:
             for j in range(maze.height):
                 for i in range(maze.width):
-                    sq_type = maze.getitem(i, j).type
+                    square = maze.getitem(i, j)
+                    sq_bg = square.background
+                    if isinstance(sq_bg, str) and len(sq_bg) > 0:
+                        sq_img = self.square_background_dict[sq_bg]
+                        self.draw_on_square(maze_img, draw, sq_img, i, j)
+                    sq_type = square.type
                     if isinstance(sq_type, str) and len(sq_type) > 0:
                         sq_img = self.square_dict[sq_type]
                         self.draw_on_square(maze_img, draw, sq_img, i, j)
-            pass
 
     def draw_walls(self, maze_img, maze: Maze):
         with Drawing() as draw:
