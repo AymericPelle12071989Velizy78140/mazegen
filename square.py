@@ -3,12 +3,18 @@ from direction import Direction
 
 class Square:
     class Border:
-        def __init__(self, btype: str = ""):
+        def __init__(self, btype: str = "", color: str = "black"):
             self.type = btype
+            self.color = color
             pass
 
+        def as_key(self):
+            return "{}-{}".format(self.type, self.color)
+
         def __str__(self):
-            return "'{}'".format(self.type)
+            if not self.type:
+                return "''"
+            return "'{}-{}'".format(self.type, self.color)
     # class
 
     def __init__(self, stype: str = ""):

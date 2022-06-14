@@ -168,18 +168,42 @@ class MazeDrawer:
         for j in range(maze.height):
             for i in range(maze.width):
                 borders = maze.getitem(i, j).borders
-                bd_type = borders[Direction.TOP].type
-                if isinstance(bd_type, str) and len(bd_type) > 0:
-                    self.draw_top_border(maze_img, i, j, self.wall_dict[bd_type])
-                bd_type = borders[Direction.LEFT].type
-                if isinstance(bd_type, str) and len(bd_type) > 0:
-                    self.draw_left_border(maze_img, i, j, self.wall_dict[bd_type])
-                bd_type = borders[Direction.BOTTOM].type
-                if isinstance(bd_type, str) and len(bd_type) > 0:
-                    self.draw_bottom_border(maze_img, i, j, self.wall_dict[bd_type])
-                bd_type = borders[Direction.RIGHT].type
-                if isinstance(bd_type, str) and len(bd_type) > 0:
-                    self.draw_right_border(maze_img, i, j, self.wall_dict[bd_type])
+                self.draw_top_wall(maze_img, i, j, borders[Direction.TOP])
+                self.draw_left_wall(maze_img, i, j, borders[Direction.LEFT])
+                self.draw_bottom_wall(maze_img, i, j, borders[Direction.BOTTOM])
+                self.draw_right_wall(maze_img, i, j, borders[Direction.RIGHT])
+
+    def draw_top_wall(self, maze_img, i, j, border):
+        bd_type = border.type
+        if isinstance(bd_type, str) and len(bd_type) > 0:
+            bd_color = self.get_border_color(border)
+            self.draw_top_border(maze_img, i, j, bd_color)
+
+    def draw_left_wall(self, maze_img, i, j, border):
+        bd_type = border.type
+        if isinstance(bd_type, str) and len(bd_type) > 0:
+            bd_color = self.get_border_color(border)
+            self.draw_left_border(maze_img, i, j, bd_color)
+
+    def draw_bottom_wall(self, maze_img, i, j, border):
+        bd_type = border.type
+        if isinstance(bd_type, str) and len(bd_type) > 0:
+            bd_color = self.get_border_color(border)
+            self.draw_bottom_border(maze_img, i, j, bd_color)
+
+    def draw_right_wall(self, maze_img, i, j, border):
+        bd_type = border.type
+        if isinstance(bd_type, str) and len(bd_type) > 0:
+            bd_color = self.get_border_color(border)
+            self.draw_right_border(maze_img, i, j, bd_color)
+
+    def get_border_color(self, border):
+        bd_key = border.as_key()
+        if bd_key in self.wall_dict:
+            bd_color = self.wall_dict[bd_key]
+        else:
+            bd_color = Color(border.color)
+        return bd_color
 
     def draw_on_square(self, maze_img, sq_img, i, j):
         with Drawing() as draw:

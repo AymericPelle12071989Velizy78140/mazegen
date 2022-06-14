@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import openpyxl
+from parse import parse
 
 import grid.grid
 from direction import Direction
@@ -23,13 +24,24 @@ class Maze(grid.grid.Grid):
         @staticmethod
         def __border_from_side(side: openpyxl.styles.borders.Side):
             # https://openpyxl.readthedocs.io/en/stable/api/openpyxl.styles.borders.html?highlight=border#openpyxl.styles.borders.Border
+            border = Maze.Square.Border()
             if side.style is not None:
                 match side.style:
                     case "hair" | "thin" | "thick" | "medium":
-                        return Maze.Square.Border("wall")
+                        border.type = "wall"
                     case _:
-                        pass
-            return Maze.Square.Border()
+                        raise Exception("Border style not handled '{}'.".format(side.style))
+                if side.color:
+                    border.color = Maze.Square.__openpyxl_color_to_color_hexastr(side.color.rgb)
+            return border
+
+        @staticmethod
+        def __openpyxl_color_to_color_hexastr(rgb):
+            res = parse("{a:.2}{r:.2}{g:.2}{b:.2}", rgb)
+            if res is None:
+                return "black"
+            print(rgb, res['r'], res['g'], res['b'], res['a'])
+            return "#{}{}{}{}".format(res['r'], res['g'], res['b'], res['a'])
     # class
 
     def __init__(self, maze_arg=None):
