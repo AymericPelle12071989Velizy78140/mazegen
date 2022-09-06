@@ -1,7 +1,7 @@
 {
   "square_size": 124,
   "wall_size": 3,
-  "background_image": "img/background/light_blue_bg.png",
+  "background_image": "img/background/parchment.png",
   "background_color": "white",
 
   "walls":
@@ -19,8 +19,8 @@
   {
     "Start": { "shortname": "S", "file": "img/depart.svg" },
     "Trap": { "shortname": "T", "file": "img/toile-arraignee.svg" },
-    "Bonus": { "shortname": "B", "file": "img/beans.svg" },
-    "Replay": { "shortname": "R", "file": "img/rejouer-shadow.svg" },
+    "Bonus": { "shortname": "B", "file": "img/beans-yo.svg" },
+    "Replay": { "shortname": "R", "file": "img/rejouer-y.svg" },
     "Finish": { "shortname": "F", "file": "img/arrivee-shadow.svg" },
     "VBL": { "shortname": "VL", "file": "img/fleches_1_b.svg" },
     "VBU": { "shortname": "VU", "file": "img/fleches_1_b.svg", "rotation": 90 },
