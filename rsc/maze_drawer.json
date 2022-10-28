@@ -19,7 +19,8 @@
   {
     "Start": { "shortname": "S", "file": "img/depart.svg" },
     "Trap": { "shortname": "T", "file": "img/toile-arraignee.svg" },
-    "Bonus": { "shortname": "B", "file": "img/beans-yo.svg" },
+    "BYO": { "shortname": "B", "file": "img/beans-yo.svg" },
+    "BBO": { "file": "img/beans-bo.svg" },
     "Replay": { "shortname": "R", "file": "img/rejouer-y.svg" },
     "Finish": { "shortname": "F", "file": "img/arrivee-shadow.svg" },
     "VNL": { "shortname": "VL", "file": "img/fleches_1_n.svg" },
