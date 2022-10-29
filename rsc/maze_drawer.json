@@ -12,7 +12,8 @@
 
   "square_backgrounds":
   {
-    "bg": "img/sqbg.svg"
+    "bg": "img/sqbg.svg",
+    "ice": "img/sq_bg/ice.svg"
   },
 
   "squares":
