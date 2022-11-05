@@ -83,7 +83,14 @@ class MazeDrawer:
             image = self.__load_image(img_path)
             rotation = int(jdata.get('rotation', 0))
             if rotation != 0:
+                iwidth = image.width
+                iheight = image.height
+                assert iwidth % 2 == 0
+                assert iheight % 2 == 0
                 image.rotate(rotation)
+                left = (image.width - iwidth) // 2
+                top = (image.height - iheight) // 2
+                image.crop(left=left, top=top, width=iwidth, height=iheight)
             if jdata.get('hflip', False):
                 image.flop()
             if jdata.get('vflip', False):
