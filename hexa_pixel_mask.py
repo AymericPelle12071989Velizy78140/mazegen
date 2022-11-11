@@ -24,6 +24,11 @@ class HexaPixelMask:
         return self.__pixel_shape.points(Vec2i(0, self.__off_y()))
 
     def crop_image(self, image: Image):
+        self.alpha_image(image)
+        image.crop(left=0, top=self.__pixel_shape.left_up.y + self.__off_y(),
+                   width=image.width, height=self.__pixel_shape.height)
+
+    def alpha_image(self, image):
         with Drawing() as draw:
             draw.composite(operator='dst_in',
                            left=0, top=0, width=image.width, height=image.height,
