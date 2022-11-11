@@ -55,3 +55,14 @@ def convert_svg_to_png(svg_path, png_path, *args):
         raise EnvironmentError("External program 'rsvg-convert' is not found.")
     svg_path = svg_path.strip()
     os.system(cmd)
+
+
+def rotate_and_center_crop_image(image, rotation):
+    iwidth = image.width
+    iheight = image.height
+    assert iwidth % 2 == 0
+    assert iheight % 2 == 0
+    image.rotate(rotation)
+    left = (image.width - iwidth) // 2
+    top = (image.height - iheight) // 2
+    image.crop(left=left, top=top, width=iwidth, height=iheight)
