@@ -16,6 +16,9 @@ class HexaTiling:
     def hexagon_dimension(self):
         return self.__pixel_shape.dimension
 
+    def surface_dimension(self, cr_dim):
+        return self.tile_pos((cr_dim[0] - 1, cr_dim[1] - 1)) + self.hexagon_dimension()
+
     def tile_pos(self, pos):
         return Vec2i(self.tile_x(pos[0]), self.tile_y(pos[0], pos[1]))
 

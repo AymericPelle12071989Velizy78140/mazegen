@@ -18,6 +18,7 @@ from hexa_tiling import HexaTiling
 from maze import Maze
 from maze_drawer import MazeDrawer
 from program import Program
+from vec2i import Vec2i
 
 
 class Mazegen(Program):
@@ -47,7 +48,8 @@ class Mazegen(Program):
         sq_image = Image(filename=f"rsc/img/hexa/hexatest_{hexa_width}.bmp")
         hexa_pixel_mask.crop_image(sq_image)
 
-        mz_image = Image(width=800, height=800, background=Color("#00000000"))
+        surface_dim = hexa_tiling.surface_dimension((4, 4))
+        mz_image = Image(width=surface_dim.x, height=surface_dim.y, background=Color("#00000000"))
         for j in range(0, 4):
             for i in range(0, 4):
                 with Drawing() as draw:
