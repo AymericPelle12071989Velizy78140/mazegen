@@ -1,4 +1,4 @@
-from direction import Direction
+from direction4 import Direction4
 
 
 class Square:
@@ -23,20 +23,20 @@ class Square:
         self.borders = [Square.Border(), Square.Border(), Square.Border(), Square.Border()]
 
     @property
-    def top(self):
-        return self.borders[Direction.TOP]
+    def up(self):
+        return self.borders[Direction4.UP]
 
     @property
     def left(self):
-        return self.borders[Direction.LEFT]
+        return self.borders[Direction4.LEFT]
 
     @property
-    def bottom(self):
-        return self.borders[Direction.BOTTOM]
+    def down(self):
+        return self.borders[Direction4.DOWN]
 
     @property
     def right(self):
-        return self.borders[Direction.RIGHT]
+        return self.borders[Direction4.RIGHT]
 
     @property
     def background(self):
@@ -47,7 +47,7 @@ class Square:
         self._background = value
 
     def __str__(self):
-        borders_str = "[{}, {}, {}, {}]".format(self.top, self.left, self.bottom, self.right)
+        borders_str = "[{}, {}, {}, {}]".format(self.up, self.left, self.down, self.right)
         type_str = self.type.replace('\n', ' ') if self.type is not None else ""
         background_str = self._background.replace('\n', ' ') if self._background is not None else ""
         return "Square:{{'{}', '{}', {}}}".format(type_str, background_str, borders_str)

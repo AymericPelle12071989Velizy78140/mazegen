@@ -4,7 +4,7 @@ import openpyxl
 from parse import parse
 
 import grid.grid
-from direction import Direction
+from direction4 import Direction4
 from square import Square
 
 
@@ -16,10 +16,10 @@ class Maze(grid.grid.Grid):
         def __init__(self, cell: openpyxl.cell.cell.Cell):
             super().__init__()
             self.type = cell.value
-            self.borders[Direction.TOP] = Maze.Square.__border_from_side(cell.border.top)
-            self.borders[Direction.LEFT] = Maze.Square.__border_from_side(cell.border.left)
-            self.borders[Direction.BOTTOM] = Maze.Square.__border_from_side(cell.border.bottom)
-            self.borders[Direction.RIGHT] = Maze.Square.__border_from_side(cell.border.right)
+            self.borders[Direction4.UP] = Maze.Square.__border_from_side(cell.border.top)
+            self.borders[Direction4.LEFT] = Maze.Square.__border_from_side(cell.border.left)
+            self.borders[Direction4.DOWN] = Maze.Square.__border_from_side(cell.border.bottom)
+            self.borders[Direction4.RIGHT] = Maze.Square.__border_from_side(cell.border.right)
 
         @staticmethod
         def __border_from_side(side: openpyxl.styles.borders.Side):

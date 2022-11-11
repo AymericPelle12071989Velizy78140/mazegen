@@ -8,7 +8,7 @@ from wand.drawing import Drawing
 
 import image_toolkit
 import pxconv
-from direction import Direction
+from direction4 import Direction4
 from maze import Maze
 
 
@@ -175,10 +175,10 @@ class MazeDrawer:
         for j in range(maze.height):
             for i in range(maze.width):
                 borders = maze.getitem(i, j).borders
-                self.draw_top_wall(maze_img, i, j, borders[Direction.TOP])
-                self.draw_left_wall(maze_img, i, j, borders[Direction.LEFT])
-                self.draw_bottom_wall(maze_img, i, j, borders[Direction.BOTTOM])
-                self.draw_right_wall(maze_img, i, j, borders[Direction.RIGHT])
+                self.draw_top_wall(maze_img, i, j, borders[Direction4.UP])
+                self.draw_left_wall(maze_img, i, j, borders[Direction4.LEFT])
+                self.draw_bottom_wall(maze_img, i, j, borders[Direction4.DOWN])
+                self.draw_right_wall(maze_img, i, j, borders[Direction4.RIGHT])
 
     def draw_top_wall(self, maze_img, i, j, border):
         bd_type = border.type

@@ -32,10 +32,10 @@ class Mazegen(Program):
 
     def run(self):
         self.wip()
-        # maze_drawer = MazeDrawer()
-        # maze_drawer.init_from_json_file(self.args.maze_drawer)
-        # maze_files = self.__input_mazes()
-        # self.draw_mazes(maze_drawer, maze_files)
+        maze_drawer = MazeDrawer()
+        maze_drawer.init_from_json_file(self.args.maze_drawer)
+        maze_files = self.__input_mazes()
+        self.draw_mazes(maze_drawer, maze_files)
 
     def wip(self):
         hexa_width = 124
