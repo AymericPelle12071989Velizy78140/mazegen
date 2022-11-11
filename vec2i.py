@@ -16,6 +16,9 @@ class Vec2i:
             case _:
                 raise ValueError(args)
 
+    def xy(self):
+        return self.x, self.y
+
     def __eq__(self, other):
         return self.x == other.x and self.y == other.y
 
