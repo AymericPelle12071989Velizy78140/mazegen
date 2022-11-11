@@ -1,12 +1,20 @@
 #!/usr/bin/env python3
+import math
+import os
+from builtins import min
 from pathlib import Path
 
 from parse import with_pattern, parse
 import argparse
 
+from wand.color import Color
 from wand.display import display
+from wand.drawing import Drawing
+from wand.image import Image
 
 import pxconv
+from hexa_pixel_mask import HexaPixelMask
+from hexa_tiling import HexaTiling
 from maze import Maze
 from maze_drawer import MazeDrawer
 from program import Program
@@ -22,10 +30,47 @@ class Mazegen(Program):
         return argparser.parse_args()
 
     def run(self):
-        maze_drawer = MazeDrawer()
-        maze_drawer.init_from_json_file(self.args.maze_drawer)
-        maze_files = self.__input_mazes()
-        self.draw_mazes(maze_drawer, maze_files)
+        self.wip()
+        # maze_drawer = MazeDrawer()
+        # maze_drawer.init_from_json_file(self.args.maze_drawer)
+        # maze_files = self.__input_mazes()
+        # self.draw_mazes(maze_drawer, maze_files)
+
+    def wip(self):
+        hexa_width = 124
+
+        hexa_pixel_mask = HexaPixelMask(hexa_width)
+        hexa_tiling = HexaTiling(hexa_width)
+
+        # sq_image = Image(width=hexa_width, height=hexa_width, background=Color("cyan"))
+        # mask_image.crop_image(sq_image)
+        # image_path = "hexatest_124.bmp"  #
+        # sq_image.save(filename=image_path)  #
+        # exit(-1)
+        sq_image = Image(filename=f"rsc/img/hexa/hexatest_{hexa_width}.bmp")
+        hexa_pixel_mask.crop_image(sq_image)
+
+        mz_image = Image(width=800, height=800, background=Color("#00000000"))
+        for j in range(0, 4):
+            for i in range(0, 4):
+                with Drawing() as draw:
+                    sq_pos = hexa_tiling.tile_pos((i, j))
+                    draw.composite(operator='over',
+                                   left=sq_pos[0], top=sq_pos[1], width=sq_image.width, height=sq_image.height,
+                                   image=sq_image)
+                    draw(mz_image)
+#        mz_image.antialias = False
+        with Drawing() as draw:
+            draw.stroke_width = 4
+            draw.stroke_color = Color('black')
+            draw.line((50, 50), (400, 200))
+            draw(mz_image)
+
+        image_path = "output/mz_image.png"
+        mz_image.save(filename=image_path)
+        os.system(f"eog {image_path}")
+        # if Path(image_path).exists():
+        #     os.remove(image_path)
 
     def __input_mazes(self):
         input_xlsx_path = Path(self.args.input_xlsx_path)
@@ -60,6 +105,7 @@ class Mazegen(Program):
         with maze_drawer.create_maze_image(maze) as img:
             img.save(filename=output_file)
             if self.args.display:
+                # os.system(f"eog {output_file}")
                 display(img)
 
 
