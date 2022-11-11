@@ -34,5 +34,17 @@ class HexaPixelMask:
                            left=0, top=0, width=image.width, height=image.height,
                            image=self.__mask_image)
             draw(image)
-        image.crop(left=0, top=self.__pixel_shape.left_up.y + self.__off_y(),
-                   width=image.width, height=self.__pixel_shape.height)
+
+    def create_test_image(self, output_image_path):
+        hexa_width = self.__pixel_shape.width
+        hexa_image = Image(width=hexa_width, height=hexa_width, background=Color("cyan"))
+        self.alpha_image(hexa_image)
+        hexa_points = self.hexagon_points()
+        with Drawing() as draw:
+            draw.fill_color = Color("white")
+            draw.color(0, 0, 'replace')
+            draw.fill_color = Color("magenta")
+            for hexa_pt in hexa_points:
+                draw.point(*hexa_pt.xy())
+            draw(hexa_image)
+        hexa_image.save(filename=output_image_path)

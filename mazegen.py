@@ -42,11 +42,8 @@ class Mazegen(Program):
         hexa_pixel_mask = HexaPixelMask(hexa_width)
         hexa_tiling = HexaTiling(hexa_width)
 
-        # sq_image = Image(width=hexa_width, height=hexa_width, background=Color("cyan"))
-        # mask_image.crop_image(sq_image)
-        # image_path = "hexatest_124.bmp"  #
-        # sq_image.save(filename=image_path)  #
-        # exit(-1)
+        hexa_pixel_mask.create_test_image(f"/tmp/hexatest_{hexa_width}.bmp")
+
         sq_image = Image(filename=f"rsc/img/hexa/hexatest_{hexa_width}.bmp")
         hexa_pixel_mask.crop_image(sq_image)
 
