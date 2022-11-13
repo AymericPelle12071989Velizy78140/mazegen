@@ -48,7 +48,7 @@ class MazeDrawerBase:
 
     def __load_border_size(self, jstruct):
         bd_size = jstruct.get('border_size', "3")
-        self.square_size = pxconv.to_px(bd_size)
+        self.border_size = pxconv.to_px(bd_size)
 
     def __load_background_image(self, jstruct, rsc_dirpath: Path):
         bg_img_relpath = jstruct.get('background_image', None)
@@ -66,6 +66,7 @@ class MazeDrawerBase:
             self.__load_square_image_from_jdata(self.ground_dict, key, value, rsc_dirpath)
 
     def __load_square_image_from_jdata(self, img_dict: dict, key: str, jdata, rsc_dirpath: Path):
+        logging.info(f"{self.__class__.__name__}: Loading image '{key}'.")
         if key in img_dict:
             logging.error(f"{self.__class__.__name__}: Image '{key}' is already loaded in image dict.")
             return
