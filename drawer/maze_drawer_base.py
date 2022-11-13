@@ -78,14 +78,14 @@ class MazeDrawerBase:
     def __load_square_image_from_str(self, img_dict, jdata, key, rsc_dirpath):
         # "Finish": "finish.png"
         img_path = rsc_dirpath / jdata
-        image = image_toolkit.load_image(img_path, self.square_size)
+        image = image_toolkit.load_image(str(img_path), self.square_size)
         self._filter_image(image)
         img_dict[key] = image
 
     def __load_square_image_from_jstruct(self, img_dict: dict, key: str, jstruct, rsc_dirpath: Path):
         # "Finish": { "shortname": "F", "file": "finish.png", "rotation": "90", "hflip": true, "vflip": true }
         img_path = rsc_dirpath / jstruct['file']
-        image = image_toolkit.load_image(img_path, self.square_size)
+        image = image_toolkit.load_image(str(img_path), self.square_size)
         self.__transform_image_with_jstruct(image, jstruct)
         self._filter_image(image)
         img_dict[key] = image

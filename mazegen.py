@@ -15,6 +15,7 @@ from wand.image import Image
 
 import pxconv
 from data.hexagon_maze import HexagonMaze
+from drawer.hexagon_maze_drawer import HexagonMazeDrawer
 from hexa_pixel_mask import HexaPixelMask
 from hexa_tiling import HexaTiling
 from maze import Maze
@@ -51,7 +52,9 @@ class Mazegen(Program):
             maze_drawer.init_from_json_file(self.args.maze_drawer)
             return maze_drawer
         if self.args.hexagon_maze:
-            return None
+            maze_drawer = HexagonMazeDrawer()
+            maze_drawer.init_from_json_file(self.args.maze_drawer)
+            return maze_drawer
         raise Exception("WHUT")
 
     # SQUARE or HEXA
@@ -120,7 +123,7 @@ class Mazegen(Program):
         with maze_drawer.create_maze_image(maze) as img:
             img.save(filename=output_file)
             if self.args.display:
-                # os.system(f"eog {output_file}")
+                os.system(f"eog {output_file}")
                 display(img)
 
     def __check_output_path(self):
