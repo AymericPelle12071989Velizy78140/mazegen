@@ -8,5 +8,6 @@ class HexagonMaze(MazeBase):
 
     def _build_square_from_cells(self, s_cell, g_cell, b_cell):
         square = HexagonalSquare()
-        square.build_from_cells(s_cell, g_cell, b_cell)
-        return square
+        if square.build_from_cells(s_cell, g_cell, b_cell):
+            return square
+        return None

@@ -9,7 +9,7 @@ class SquareBase:
         self._ground = None
         self.set_type("" if stype is None else str(stype))
         self.set_ground("" if ground is None else str(ground))
-        self._borders = [Border()] * nb_border
+        self._borders = [Border() for _ in range(nb_border)]
 
     @property
     def type(self):
@@ -36,15 +36,17 @@ class SquareBase:
         return len(self._borders)
 
     def _build_from_strings(self, stype: str, ground: str, borders: list[str]):
+        if stype is None or len(stype) == 0:
+            return False
         self.set_type(stype)
         self.set_ground(ground)
         if len(borders) != self.number_of_borders():
-            msg = f"Border string list must have {self.number_of_borders()} borders, not {len(borders)}."
-            logging.critical(msg)
-            raise ValueError(msg)
+            logging.critical(f"Border string list must have {self.number_of_borders()} borders, not {len(borders)}.")
+            return False
         for i, border in enumerate(borders):
             self.border(i).set_type(border)
+        return True
 
     def __str__(self):
-        bds = ".".join([str(x) for x in self._borders])
-        return f"[T:{self.type}, G:{self._ground}, B:({bds})]"
+        bds = ", ".join([f"'{str(x)}'" for x in self._borders])
+        return f"[T:'{self.type}', G:'{self._ground}', B:({bds})]"
