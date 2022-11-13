@@ -1,0 +1,57 @@
+{
+  "square_size": 124,
+  "border_size": 3,
+  "background_color": "white",
+  "background_image": "img/background/parchment.png",
+
+  "borders":
+  {
+    "empty": "rgb(207,207,207)",
+    "wall": "black"
+  },
+
+  "grounds":
+  {
+    "bg": "img/sqbg.svg",
+    "ice": "img/sq_bg/ice.svg"
+  },
+
+  "squares":
+  {
+    "Start": { "shortname": "S", "file": "img/depart.svg" },
+    "Trap": { "shortname": "T", "file": "img/toile-arraignee.svg" },
+    "BYO": { "shortname": "B", "file": "img/beans-yo.svg" },
+    "BBO": { "file": "img/beans-bo.svg" },
+    "Replay": { "shortname": "R", "file": "img/rejouer-y.svg" },
+    "Finish": { "shortname": "F", "file": "img/arrivee-shadow.svg" },
+    "VNL": { "shortname": "VL", "file": "img/fleches_1_n.svg" },
+    "VNU": { "shortname": "VU", "file": "img/fleches_1_n.svg", "rotation": 90 },
+    "VNR": { "shortname": "VR", "file": "img/fleches_1_n.svg", "rotation": 180 },
+    "VND": { "shortname": "VD", "file": "img/fleches_1_n.svg", "rotation": -90 },
+    "VBL": { "file": "img/fleches_1_b.svg" },
+    "VBU": { "file": "img/fleches_1_b.svg", "rotation": 90 },
+    "VBR": { "file": "img/fleches_1_b.svg", "rotation": 180 },
+    "VBD": { "file": "img/fleches_1_b.svg", "rotation": -90 },
+    "VOL": { "file": "img/fleches_1_o.svg" },
+    "VOU": { "file": "img/fleches_1_o.svg", "rotation": 90 },
+    "VOR": { "file": "img/fleches_1_o.svg", "rotation": 180 },
+    "VOD": { "file": "img/fleches_1_o.svg", "rotation": -90 },
+    "CBOU": { "hflip": true, "file": "img/fleches_2_ob.svg", "rotation": 90 },
+    "COBU": { "shortname": "CU", "file": "img/fleches_2_ob.svg" },
+    "COBR": { "shortname": "CR", "file": "img/fleches_2_ob.svg", "rotation": 90 },
+    "COBD": { "shortname": "CD", "file": "img/fleches_2_ob.svg", "rotation": 180 },
+    "COBL": { "shortname": "CL", "file": "img/fleches_2_ob.svg", "rotation": -90 },
+    "CRVU": { "file": "img/fleches_2_rv.svg" },
+    "CRVR": { "file": "img/fleches_2_rv.svg", "rotation": 90 },
+    "CRVD": { "file": "img/fleches_2_rv.svg", "rotation": 180 },
+    "CRVL": { "file": "img/fleches_2_rv.svg", "rotation": -90 },
+    "LOBR": { "shortname": "LR", "file": "img/fleches_2_line_ob.svg" },
+    "LOBD": { "shortname": "LD", "file": "img/fleches_2_line_ob.svg", "rotation": 90 },
+    "LOBL": { "shortname": "LL", "file": "img/fleches_2_line_ob.svg", "rotation": 180 },
+    "LOBU": { "shortname": "LU", "file": "img/fleches_2_line_ob.svg", "rotation": -90 },
+    "TVBOU": { "shortname": "TU", "file": "img/fleches_3_vbo.svg" },
+    "TVBOR": { "shortname": "TR", "file": "img/fleches_3_vbo.svg", "rotation": 90 },
+    "TVBOD": { "shortname": "TD", "file": "img/fleches_3_vbo.svg", "rotation": 180 },
+    "TVBOL": { "shortname": "TL", "file": "img/fleches_3_vbo.svg", "rotation": -90 }
+  }
+}

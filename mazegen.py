@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import logging
 import math
 import os
 from builtins import min
@@ -13,6 +14,7 @@ from wand.drawing import Drawing
 from wand.image import Image
 
 import pxconv
+from data.hexagon_maze import HexagonMaze
 from hexa_pixel_mask import HexaPixelMask
 from hexa_tiling import HexaTiling
 from maze import Maze
@@ -25,17 +27,40 @@ class Mazegen(Program):
     def _parse_args(self):
         argparser = argparse.ArgumentParser()
         argparser.add_argument('maze_drawer', type=str, help='Input maze drawer JSON file')
-        argparser.add_argument('input_xlsx_path', type=str, help='Input XLSX file or directory')
-        argparser.add_argument('output_path', type=str, help='Output directory')
+        argparser.add_argument('input_path', type=str, help='Input XLSX file or directory')
+        argparser.add_argument('output_directory_path', type=str, help='Output directory')
         argparser.add_argument('-D', '--display', action='store_true')
+        argparser.add_argument('-S', '--square_maze', action='store_true')
+        argparser.add_argument('-H', '--hexagon_maze', action='store_true')
         return argparser.parse_args()
 
     def run(self):
-        self.wip()
-        maze_drawer = MazeDrawer()
-        maze_drawer.init_from_json_file(self.args.maze_drawer)
+        # try:
+            # self.wip()
         maze_files = self.__input_mazes()
+        maze_drawer = self.__load_maze_drawer()
         self.draw_mazes(maze_drawer, maze_files)
+        # except BaseException as ex:
+        #     logging.critical(f"Exception raised: {ex}")
+        #     raise ex
+
+    # SQUARE or HEXA
+    def __load_maze_drawer(self):
+        if self.args.square_maze:
+            maze_drawer = MazeDrawer()
+            maze_drawer.init_from_json_file(self.args.maze_drawer)
+            return maze_drawer
+        if self.args.hexagon_maze:
+            return None
+        raise Exception("WHUT")
+
+    # SQUARE or HEXA
+    def __load_maze(self, maze_file):
+        if self.args.square_maze:
+            return Maze(maze_file)
+        if self.args.hexagon_maze:
+            return HexagonMaze(maze_file)
+        raise Exception("WHUT")
 
     def wip(self):
         hexa_width = 124
@@ -72,40 +97,43 @@ class Mazegen(Program):
         #     os.remove(image_path)
 
     def __input_mazes(self):
-        input_xlsx_path = Path(self.args.input_xlsx_path)
-        if not input_xlsx_path.exists():
-            raise Exception("Input XSLX path does not exist : '{}'".format(self.args.input_xlsx_path))
-        if input_xlsx_path.absolute().is_file():
-            return [self.args.input_xlsx_path]
-        elif input_xlsx_path.is_dir():
-            return input_xlsx_path.glob("*.xlsx")
-        raise Exception("Input XSLX path must be a file or a directory.")
+        input_path = Path(self.args.input_path)
+        if not input_path.exists():
+            raise Exception("Input path does not exist : '{}'".format(self.args.input_path))
+        if input_path.absolute().is_file():
+            return [self.args.input_path]
+        elif input_path.is_dir():
+            return input_path.glob("*.xlsx")
+        raise Exception("Input path must be a file or a directory.")
 
     def draw_mazes(self, maze_drawer, maze_files):
         self.__check_output_path()
         for maze_file in maze_files:
             self.draw_maze(maze_drawer, str(maze_file), self.__output_file(maze_file))
 
-    def __check_output_path(self):
-        odir = Path(self.args.output_path)
-        if odir.exists():
-            if not odir.is_dir():
-                raise Exception("Output path must be a directory : '{}'".format(self.args.output_path))
-        else:
-            odir.mkdir(parents=True)
-
-    def __output_file(self, input_file, ext="bmp"):
-        opath = "{}/{}.{}"
-        return opath.format(self.args.output_path, Path(input_file).stem, ext)
-
     def draw_maze(self, maze_drawer, maze_file, output_file):
-        print("# Generating '{output}' from '{input}'...".format(input=maze_file, output=output_file))
-        maze = Maze(maze_file)
+        logging.info(f"Generating '{output_file}' from '{maze_file}'...")
+        maze = self.__load_maze(maze_file)
+        if maze_drawer is None:
+            logging.error("WIP: No maze drawer provided.")
+            return
         with maze_drawer.create_maze_image(maze) as img:
             img.save(filename=output_file)
             if self.args.display:
                 # os.system(f"eog {output_file}")
                 display(img)
+
+    def __check_output_path(self):
+        odir = Path(self.args.output_directory_path)
+        if odir.exists():
+            if not odir.is_dir():
+                raise Exception("Output path must be a directory : '{}'".format(self.args.output_directory_path))
+        else:
+            odir.mkdir(parents=True)
+
+    def __output_file(self, input_file, ext="bmp"):
+        opath = "{}/{}.{}"
+        return opath.format(self.args.output_directory_path, Path(input_file).stem, ext)
 
 
 if __name__ == "__main__":
