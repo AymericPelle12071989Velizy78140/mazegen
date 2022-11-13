@@ -16,6 +16,9 @@ class Vec2i:
             case _:
                 raise ValueError(args)
 
+    def xy(self):
+        return self.x, self.y
+
     def __eq__(self, other):
         return self.x == other.x and self.y == other.y
 
@@ -72,5 +75,16 @@ class Vec2i:
         vec %= fac
         return vec
 
+    def __getitem__(self, item):
+        val = None
+        match int(item):
+            case 0: val = self.x
+            case 1: val = self.y
+            case _: raise ValueError(item)
+        return val
+
     def __str__(self) -> str:
         return f"({self.x}, {self.y})"
+
+    def __repr__(self):
+        return str(self)
