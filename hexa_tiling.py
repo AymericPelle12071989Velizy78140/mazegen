@@ -17,10 +17,17 @@ class HexaTiling:
         return self.__pixel_shape.dimension
 
     def surface_dimension(self, cr_dim):
-        return self.tile_pos((cr_dim[0] - 1, cr_dim[1] - 1)) + self.hexagon_dimension()
+        pos = (cr_dim[0] - 1, cr_dim[1] - 1)
+        if cr_dim[0] % 2 == 0:
+            return self.tile_pos(pos) + self.hexagon_dimension()
+        px = self.tile_x(pos[0])
+        py = self.tile_y(pos[0] - 1, pos[1])
+        return Vec2i(px, py) + self.hexagon_dimension()
 
     def tile_pos(self, pos):
-        return Vec2i(self.tile_x(pos[0]), self.tile_y(pos[0], pos[1]))
+        px = self.tile_x(pos[0])
+        py = self.tile_y(pos[0], pos[1])
+        return Vec2i(px, py)
 
     def tile_x(self, i: int):
         hexa_width = self.hexagon_width()
