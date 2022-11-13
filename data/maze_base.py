@@ -10,15 +10,14 @@ class MazeBase(Grid, ABC):
     def __init__(self, maze_arg=None):
         # https://www.geeksforgeeks.org/python-reading-excel-file-using-openpyxl-module/
         super().__init__()
-        match type(maze_arg):
-            case openpyxl.workbook.workbook.Workbook:
-                self.build_from_workbook(maze_arg)
-            case str():
-                self.build_from_xslx(Path(maze_arg))
-            case Path():
-                self.build_from_xslx(maze_arg)
-            case _:
-                raise ValueError(f"'{maze_arg}' has invalid type '{type(maze_arg)}'.")
+        if type(maze_arg) is openpyxl.workbook.workbook.Workbook:
+            self.build_from_workbook(maze_arg)
+        elif type(maze_arg) is str:
+            self.build_from_xslx(Path(maze_arg))
+        elif type(maze_arg) is Path:
+            self.build_from_xslx(maze_arg)
+        else:
+            raise ValueError(f"'{maze_arg}' has invalid type '{type(maze_arg)}'.")
 
     def build_from_xslx(self, xlsx_file: Path):
         wbook = openpyxl.load_workbook(str(xlsx_file))
@@ -38,15 +37,19 @@ class MazeBase(Grid, ABC):
         mz_width = squares_sheet.max_column - squares_sheet.min_column + 1
         mz_height = squares_sheet.max_row - squares_sheet.min_row + 1
         self.build(mz_width, mz_height)
-        for j in range(self.height):
-            for i in range(self.width):
-                s_cell = squares_sheet.cell(row=j, column=i)
-                g_cell = grounds_sheet.cell(row=j, column=i) if grounds_sheet is not None else None
-                b_cell = borders_sheet.cell(row=j, column=i)
+        j = 0
+        for sj in range(squares_sheet.min_row, squares_sheet.max_row + 1):
+            i = 0
+            for si in range(squares_sheet.min_column, squares_sheet.max_column + 1):
+                s_cell = squares_sheet.cell(row=sj, column=si)
+                g_cell = grounds_sheet.cell(row=sj, column=si) if grounds_sheet is not None else None
+                b_cell = borders_sheet.cell(row=sj, column=si)
                 square = self._build_square_from_cells(s_cell, g_cell, b_cell)
                 self.setitem(i, j, square)
                 print(f"Maze[{i},{j}]: {square}")
+                i += 1
             print()
+            j += 1
 
     @staticmethod
     def __squares_sheet_name():

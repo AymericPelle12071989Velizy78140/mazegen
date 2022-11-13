@@ -6,7 +6,7 @@ class Grid:
         self._width = 0
         self._height = 0
         self._data = []
-        self.build(args)
+        self.build(*args)
 
     def build(self, *args):
         match len(args):
