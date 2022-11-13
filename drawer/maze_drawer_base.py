@@ -69,8 +69,8 @@ class MazeDrawerBase:
         if key in img_dict:
             logging.error(f"{self.__class__.__name__}: Image '{key}' is already loaded in image dict.")
             return
-        match type(jdata):
-            case str():
+        match jdata:
+            case str(jdata):
                 self.__load_square_image_from_str(img_dict, jdata, key, rsc_dirpath)
             case _:
                 self.__load_square_image_from_jstruct(img_dict, key, jdata, rsc_dirpath)
