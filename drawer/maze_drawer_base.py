@@ -41,6 +41,7 @@ class MazeDrawerBase:
         # maze components:
         self.__load_borders_from_jdict(jstruct['borders'], rsc_dirpath)
         self.__load_grounds_from_jdict(jstruct['grounds'], rsc_dirpath)
+        self.__load_squares_from_jdict(jstruct['squares'], rsc_dirpath)
 
     def __load_square_size(self, jstruct):
         sq_size = jstruct.get('square_size', "3cm")
@@ -64,6 +65,11 @@ class MazeDrawerBase:
         self.ground_dict = dict()
         for key, value in ground_jdict.items():
             self.__load_square_image_from_jdata(self.ground_dict, key, value, rsc_dirpath)
+
+    def __load_squares_from_jdict(self, square_jdict, rsc_dirpath: Path):
+        self.square_dict = dict()
+        for key, value in square_jdict.items():
+            self.__load_square_image_from_jdata(self.square_dict, key, value, rsc_dirpath)
 
     def __load_square_image_from_jdata(self, img_dict: dict, key: str, jdata, rsc_dirpath: Path):
         logging.info(f"{self.__class__.__name__}: Loading image '{key}'.")
