@@ -33,7 +33,7 @@ class MazeDrawerBase:
 
     def load_from_jstruct(self, jstruct, rsc_dirpath: Path = None):
         # dimensions:
-        self.__load_square_size(jstruct)
+        self._load_square_size(jstruct)
         self.__load_border_size(jstruct)
         # background:
         self.background_color = Color(jstruct.get('background_color', 'white'))
@@ -43,7 +43,7 @@ class MazeDrawerBase:
         self.__load_grounds_from_jdict(jstruct['grounds'], rsc_dirpath)
         self.__load_squares_from_jdict(jstruct['squares'], rsc_dirpath)
 
-    def __load_square_size(self, jstruct):
+    def _load_square_size(self, jstruct):
         sq_size = jstruct.get('square_size', "3cm")
         self.square_size = pxconv.to_px(sq_size)
 

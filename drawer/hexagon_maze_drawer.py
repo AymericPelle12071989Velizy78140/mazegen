@@ -22,8 +22,8 @@ class HexagonMazeDrawer(MazeDrawerBase):
         self._tiling = hexa_tiling.HexaTiling(self.square_size * 2)
         self._hexa_pixel_mask = HexaPixelMask(self._tiling.hexagon_width())
 
-    def load_from_jstruct(self, jstruct, rsc_dirpath: Path = None):
-        super().load_from_jstruct(jstruct, rsc_dirpath)
+    def _load_square_size(self, jstruct):
+        super()._load_square_size(jstruct)
         assert self.square_size % 2 == 0
         self._tiling = hexa_tiling.HexaTiling(self.square_size * 2)
         self._hexa_pixel_mask = HexaPixelMask(self._tiling.hexagon_width())
