@@ -57,22 +57,24 @@ class MazeDrawerBase:
             self.background_image_path = rsc_dirpath / bg_img_relpath
 
     def __load_borders_from_jdict(self, border_jdict, rsc_dirpath: Path):
-        self.wall_dict = dict()
+        self.border_dict = dict()
         for key, value in border_jdict.items():
-            self.wall_dict[key] = Color(value)
+            logging.info(f"{self.__class__.__name__}: Loading border style '{key}'.")
+            self.border_dict[key] = Color(value)
 
     def __load_grounds_from_jdict(self, ground_jdict, rsc_dirpath: Path):
         self.ground_dict = dict()
         for key, value in ground_jdict.items():
+            logging.info(f"{self.__class__.__name__}: Loading ground image '{key}'.")
             self.__load_square_image_from_jdata(self.ground_dict, key, value, rsc_dirpath)
 
     def __load_squares_from_jdict(self, square_jdict, rsc_dirpath: Path):
         self.square_dict = dict()
         for key, value in square_jdict.items():
+            logging.info(f"{self.__class__.__name__}: Loading square image '{key}'.")
             self.__load_square_image_from_jdata(self.square_dict, key, value, rsc_dirpath)
 
     def __load_square_image_from_jdata(self, img_dict: dict, key: str, jdata, rsc_dirpath: Path):
-        logging.info(f"{self.__class__.__name__}: Loading image '{key}'.")
         if key in img_dict:
             logging.error(f"{self.__class__.__name__}: Image '{key}' is already loaded in image dict.")
             return
