@@ -17,6 +17,10 @@ class HexaPixelMask:
             draw.polygon(pts)
             draw(self.__mask_image)
 
+    @property
+    def hexagon_pixel_shape(self):
+        return self.__pixel_shape
+
     def __off_y(self):
         return self.__pixel_shape.width_2 - self.__pixel_shape.diag_2
 

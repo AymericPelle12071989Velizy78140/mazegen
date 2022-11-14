@@ -7,7 +7,7 @@
   "borders":
   {
     "empty": "rgb(207,207,207)",
-    "wall": "black"
+    "W": "black"
   },
 
   "grounds":

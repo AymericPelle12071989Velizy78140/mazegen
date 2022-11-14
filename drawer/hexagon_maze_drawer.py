@@ -1,3 +1,4 @@
+import logging
 from pathlib import Path
 
 from wand.color import Color
@@ -6,6 +7,7 @@ from wand.image import Image
 
 import hexa_tiling
 import image_toolkit
+from data.border import Border
 from data.hexagon_maze import HexagonMaze
 from data.hexagonal_square import HexagonalSquare
 from drawer.maze_drawer_base import MazeDrawerBase
@@ -52,18 +54,39 @@ class HexagonMazeDrawer(MazeDrawerBase):
                 if h_square is not None:
                     assert isinstance(h_square, HexagonalSquare)
                     self._draw_square(h_square, tile_pos, maze_img)
+        for j in range(maze.height):
+            for i in range(maze.width):
+                tile_pos = GridPosition(i, j)
+                h_square = maze[tile_pos]
+                if h_square is not None:
+                    assert isinstance(h_square, HexagonalSquare)
+                    self._draw_square_borders(h_square, tile_pos, maze_img)
 
     def _draw_square(self, square: HexagonalSquare, tile_pos: GridPosition, maze_img: Image):
         sq_ground = square.ground
         if isinstance(sq_ground, str) and len(sq_ground) > 0:
             ground_img: Image = self.ground_dict[sq_ground]
-            self._draw_on_square(ground_img, tile_pos, maze_img)
+            self._draw_on_tile(ground_img, tile_pos, maze_img)
         sq_type = square.type
         if isinstance(sq_type, str) and len(sq_type) > 0:
             type_img: Image = self.square_dict[sq_type]
-            self._draw_on_square(type_img, tile_pos, maze_img)
+            self._draw_on_tile(type_img, tile_pos, maze_img)
 
-    def _draw_on_square(self, image: Image, t_pos: GridPosition, maze_img: Image):
+    def _draw_square_borders(self, square: HexagonalSquare, tile_pos: GridPosition, maze_img: Image):
+        tile_pixel_pos = self._tiling.tile_pos(tile_pos)
+        points = self._hexa_pixel_mask.hexagon_pixel_shape.points(tile_pixel_pos)
+        points.append(points[0])
+        for bd_index in range(square.number_of_borders()):
+            border: Border = square.border(bd_index)
+            if isinstance(border.type, str) and len(border.type) > 0:
+                border_style = self.border_dict[border.type]
+                with Drawing() as draw:
+                    draw.stroke_color = border_style
+                    draw.stroke_width = self.border_size
+                    draw.line(points[bd_index].xy(), points[bd_index + 1].xy())
+                    draw(maze_img)
+
+    def _draw_on_tile(self, image: Image, t_pos: GridPosition, maze_img: Image):
         tile_img_pos = self._tiling.tile_pos(t_pos)
         with Drawing() as draw:
             draw.composite(operator='over',
