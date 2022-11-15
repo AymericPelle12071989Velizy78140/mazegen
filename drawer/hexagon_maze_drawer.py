@@ -1,4 +1,5 @@
 import logging
+from collections import deque
 from pathlib import Path
 
 from wand.color import Color
@@ -35,6 +36,7 @@ class HexagonMazeDrawer(MazeDrawerBase):
 
     def __create_empty_maze_image(self, maze: HexagonMaze):
         image_dim = self._tiling.surface_dimension((maze.width, maze.height))
+        image_dim += self.__maze_pixel_origin() * 2  # We take into account border thickness.
         maze_img = Image(width=image_dim.x, height=image_dim.y, background=Color("#00000000"))
         if self.background_image_path:
             self._draw_background(maze_img, image_dim)
@@ -74,8 +76,7 @@ class HexagonMazeDrawer(MazeDrawerBase):
 
     def _draw_square_borders(self, square: HexagonalSquare, tile_pos: GridPosition, maze_img: Image):
         tile_pixel_pos = self._tiling.tile_pos(tile_pos)
-        points = self._hexa_pixel_mask.hexagon_pixel_shape.points(tile_pixel_pos)
-        points.append(points[0])
+        points = self.__borders_points_at_tile_position(tile_pixel_pos)
         for bd_index in range(square.number_of_borders()):
             border: Border = square.border(bd_index)
             if isinstance(border.type, str) and len(border.type) > 0:
@@ -86,8 +87,17 @@ class HexagonMazeDrawer(MazeDrawerBase):
                     draw.line(points[bd_index].xy(), points[bd_index + 1].xy())
                     draw(maze_img)
 
+    def __borders_points_at_tile_position(self, tile_pixel_pos):
+        points = self._hexa_pixel_mask.hexagon_pixel_shape.points(tile_pixel_pos)
+        for point in points:
+            point += self.__maze_pixel_origin()
+        points = deque(points)
+        points.rotate(-1)
+        points.append(points[0])
+        return points
+
     def _draw_on_tile(self, image: Image, t_pos: GridPosition, maze_img: Image):
-        tile_img_pos = self._tiling.tile_pos(t_pos)
+        tile_img_pos = self._tiling.tile_pos(t_pos) + self.__maze_pixel_origin()
         with Drawing() as draw:
             draw.composite(operator='over',
                            left=tile_img_pos.x, top=tile_img_pos.y,
@@ -99,3 +109,6 @@ class HexagonMazeDrawer(MazeDrawerBase):
 
     def _square_image_size(self):
         return self._tiling.hexagon_width()
+
+    def __maze_pixel_origin(self):
+        return Vec2i(self.border_size // 2, self.border_size // 2)
